@@ -14,6 +14,7 @@ class DashBoardScreen extends StatefulWidget {
 }
 
 class _DashBoardScreenState extends State<DashBoardScreen> {
+  var userData = "loading";
   void initState() {
     print("adasnawj");
     super.initState();
@@ -37,6 +38,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             MaterialPageRoute(builder: (context) => LoginScreen()));
       } else {
         print('loggedin');
+        // setState(() {});
+        // return user;
         // return Navigator.of(context).pushReplacement(
         //     MaterialPageRoute(builder: (context) => DashBoardScreen()));
       }
@@ -87,6 +90,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         MaterialPageRoute(builder: (builder) => ShopPage()));
                   },
                   child: Text('Shop Now!')),
+              Container(
+                child: Column(
+                  children: [
+                    Text(FirebaseAuth.instance.currentUser.uid),
+                    Text(FirebaseAuth.instance.currentUser.metadata.creationTime
+                        .toLocal()
+                        .toString())
+                  ],
+                ),
+              )
             ],
           ),
         ),
