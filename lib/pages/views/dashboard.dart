@@ -14,7 +14,7 @@ class DashBoardScreen extends StatefulWidget {
 }
 
 class _DashBoardScreenState extends State<DashBoardScreen> {
-  var userData = "loading";
+  var userData;
   void initState() {
     print("adasnawj");
     super.initState();
@@ -29,6 +29,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         fontSize: 16.0);
   }
 
+  //* checking user login
   checkLogin() {
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
@@ -46,9 +47,18 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     });
   }
 
+//* geting user data from firestore
+  getUserData() async {
+    var userId = FirebaseAuth.instance.currentUser.uid;
+    var userTable = FirebaseFirestore.instance.collection('users').doc(userId);
+    userData = await userTable.get();
+    print(userData['userName']);
+  }
+
   @override
   Widget build(BuildContext context) {
     checkLogin();
+    getUserData();
 
     return Scaffold(
       appBar: AppBar(
@@ -101,12 +111,21 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   )),
               Container(
                 child: Column(
-                  children: [
-                    Text(FirebaseAuth.instance.currentUser.uid),
-                    Text(FirebaseAuth.instance.currentUser.metadata.creationTime
-                        .toLocal()
-                        .toString())
-                  ],
+                  children: userData != null
+                      ? [
+                          Text(FirebaseAuth.instance.currentUser.uid),
+                          Text(userData['userName']),
+                          Text(FirebaseAuth
+                              .instance.currentUser.metadata.creationTime
+                              .toLocal()
+                              .toString())
+                        ]
+                      : [
+                          Text('Data Loading...'),
+                          Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        ],
                 ),
               )
             ],
