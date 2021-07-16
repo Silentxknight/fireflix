@@ -90,6 +90,15 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         MaterialPageRoute(builder: (builder) => ShopPage()));
                   },
                   child: Text('Shop Now!')),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (builder) => ShopPage()));
+                  },
+                  child: Text(
+                    'Logout!',
+                    style: TextStyle(backgroundColor: Colors.red),
+                  )),
               Container(
                 child: Column(
                   children: [
