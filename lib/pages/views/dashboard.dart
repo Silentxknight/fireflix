@@ -19,6 +19,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     print("adasnawj");
     super.initState();
     print("ads");
+    getUserData();
     Fluttertoast.showToast(
         msg: "You Are Logged In Now!",
         toastLength: Toast.LENGTH_SHORT,
@@ -51,14 +52,20 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   getUserData() async {
     var userId = FirebaseAuth.instance.currentUser.uid;
     var userTable = FirebaseFirestore.instance.collection('users').doc(userId);
-    userData = await userTable.get();
-    print(userData['userName']);
+
+    await userTable.get().then((value) => {
+          setState(() {
+            userData = value;
+          }),
+        });
+    // print(userData['userName']);
   }
+
+  //!~~~~~~~~PREVIOUSLY CALLING A FUNCTION IN WIDGET BUILD AMD SETTING STATE CAUSES IFNITE LOOP,,,,,,,CALLING IT NOW IN initState()~~~~~~~~~~~~~~~
 
   @override
   Widget build(BuildContext context) {
     checkLogin();
-    getUserData();
 
     return Scaffold(
       appBar: AppBar(
