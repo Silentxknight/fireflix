@@ -19,7 +19,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     print("adasnawj");
     super.initState();
     print("ads");
+    checkLogin();
+    creatingUserAccount(FirebaseAuth.instance.currentUser.uid);
     getUserData();
+
+
     Fluttertoast.showToast(
         msg: "You Are Logged In Now!",
         toastLength: Toast.LENGTH_SHORT,
@@ -48,6 +52,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     });
   }
 
+//* creating user 
+   creatingUserAccount(userId) {
+    DocumentReference newUser =
+        FirebaseFirestore.instance.collection('users').doc(userId);
+    newUser.set({
+      'userName': 'Demo name', // John Doe
+      'enail': 'email@test.com', // Stokes and Sons
+      'usid': userId // 42
+    });
+  }
+
+
+
 //* geting user data from firestore
   getUserData() async {
     var userId = FirebaseAuth.instance.currentUser.uid;
@@ -65,7 +82,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    checkLogin();
+   
 
     return Scaffold(
       appBar: AppBar(
