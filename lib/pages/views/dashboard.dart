@@ -43,7 +43,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             MaterialPageRoute(builder: (context) => LoginScreen()));
       } else {
         print('loggedin');
-
         // setState(() {});
         // return user;
         // return Navigator.of(context).pushReplacement(
