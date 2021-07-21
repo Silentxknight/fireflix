@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_info/pages/auth/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_info/pages/views/shop/shopPage.dart';
+import 'package:firebase_info/pages/views/userProfile.dart';
 
 class DashBoardScreen extends StatefulWidget {
   // const DashBoardScreen({ Key? key }) : super(key: key);
@@ -21,8 +22,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     print("ads");
     checkLogin();
     creatingUserAccount(FirebaseAuth.instance.currentUser.uid);
-    getUserData();
-
 
     Fluttertoast.showToast(
         msg: "You Are Logged In Now!",
@@ -52,18 +51,36 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     });
   }
 
-//* creating user 
-   creatingUserAccount(userId) {
+//* creating user
+  creatingUserAccount(userId) {
     DocumentReference newUser =
         FirebaseFirestore.instance.collection('users').doc(userId);
-    newUser.set({
-      'userName': 'Demo name', // John Doe
-      'enail': 'email@test.com', // Stokes and Sons
-      'usid': userId // 42
-    });
+    newUser.get().then((value) => {
+          if (!value.exists)
+            {
+              print('user doesn;t exists'),
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (builder) => userProfileScreen(
+                        userId: FirebaseAuth.instance.currentUser.uid,
+                        userPhone:
+                            FirebaseAuth.instance.currentUser.phoneNumber,
+                      )))
+            }
+          else
+            {
+              print('user present'),
+
+              //? callin get user after checking the user exists else it will giv an error
+              getUserData(),
+            }
+        });
+
+    // newUser.set({
+    //   'userName': 'Demo name', // John Doe
+    //   'email': 'email@test.com', // Stokes and Sons
+    //   'usid': userId // 42
+    // });
   }
-
-
 
 //* geting user data from firestore
   getUserData() async {
@@ -82,8 +99,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
-   
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey[850],
@@ -139,6 +154,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       ? [
                           Text(FirebaseAuth.instance.currentUser.uid),
                           Text(userData['userName']),
+                          Text(userData['email']),
                           Text(FirebaseAuth
                               .instance.currentUser.metadata.creationTime
                               .toLocal()
